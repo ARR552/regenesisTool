@@ -2,9 +2,9 @@ module github.com/ARR552/regenesisTool
 
 go 1.22
 
-replace github.com/ledgerwatch/erigon => ../cdk-erigon
+replace github.com/ledgerwatch/erigon => ./cdk-erigon
 
-replace github.com/ledgerwatch/erigon-lib => ../cdk-erigon/erigon-lib
+replace github.com/ledgerwatch/erigon-lib => ./cdk-erigon/erigon-lib
 
 require (
 	github.com/ledgerwatch/erigon v0.0.0-00010101000000-000000000000
