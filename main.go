@@ -57,26 +57,26 @@ func main() {
 
 type GenesisAccount struct {
 	Code    *string            `json:"code,omitempty"`
-	Nonce   string             `json:"nonce"`
+	Nonce   uint64             `json:"nonce"`
 	Balance string             `json:"balance"`
 	Storage *map[string]string `json:"storage,omitempty"`
 }
 
 type Genesis struct {
-	Nonce         string                    `json:"nonce"`
-	Timestamp     string                    `json:"timestamp"`
+	Nonce         uint64                    `json:"nonce"`
+	Timestamp     uint64                    `json:"timestamp"`
 	ExtraData     string                    `json:"extraData"`
-	GasLimit      string                    `json:"gasLimit"`
-	Difficulty    string                    `json:"difficulty"`
+	GasLimit      uint64                    `json:"gasLimit"`
+	Difficulty    uint64                    `json:"difficulty"`
 	MixHash       string                    `json:"mixHash"`
 	Coinbase      string                    `json:"coinbase"`
 	Alloc         map[string]GenesisAccount `json:"alloc"`
-	Number        string                    `json:"number"`
-	GasUsed       string                    `json:"gasUsed"`
+	Number        uint64                    `json:"number"`
+	GasUsed       uint64                    `json:"gasUsed"`
 	ParentHash    string                    `json:"parentHash"`
-	BaseFeePerGas *string                   `json:"baseFeePerGas"`
-	ExcessBlobGas *string                   `json:"excessBlobGas"`
-	BlobGasUsed   *string                   `json:"blobGasUsed"`
+	BaseFeePerGas *uint64                   `json:"baseFeePerGas"`
+	ExcessBlobGas *uint64                   `json:"excessBlobGas"`
+	BlobGasUsed   *uint64                   `json:"blobGasUsed"`
 }
 
 func ExtractAccountsStorage(chaindata string, output string) error {
@@ -141,16 +141,18 @@ func ExtractAccountsStorage(chaindata string, output string) error {
 		}
 		genesis.Alloc[k] = genesisAccount
 	}
-	genesis.Nonce = "0x0"
-  	genesis.Timestamp = "0x0"
+	genesis.Nonce = 0
+  	genesis.Timestamp = 0
   	genesis.ExtraData = "0x68697665636861696e"
-  	genesis.GasLimit = "0x23f3e20"
-  	genesis.Difficulty = "0x20000"
+  	genesis.GasLimit = 37699104
+  	genesis.Difficulty = 131072
   	genesis.MixHash = "0x0000000000000000000000000000000000000000000000000000000000000000"
   	genesis.Coinbase = "0x0000000000000000000000000000000000000000"
-	genesis.Number = "0x0"
-	genesis.GasUsed = "0x0"
+	genesis.Number = 0
+	genesis.GasUsed = 0
 	genesis.ParentHash = "0x0000000000000000000000000000000000000000000000000000000000000000"
+	var bfpg uint64 = 1000000000
+	genesis.BaseFeePerGas = &bfpg
 	genesisBytes, err := json.MarshalIndent(genesis, "", "  ")
 	if err != nil {
 		return err
@@ -177,7 +179,7 @@ func extractFullAccountToStruct(chaindata string, account libcommon.Address, db 
 	}
 	fmt.Printf("CodeHash:%x\nIncarnation:%d\nNonce:%d\nBalance:%s\n", a.CodeHash, a.Incarnation, a.Nonce, a.Balance.String())
 	genesisAccount.Balance = a.Balance.Hex()
-	genesisAccount.Nonce = fmt.Sprintf("%x", a.Nonce)
+	genesisAccount.Nonce = a.Nonce
 	c, err := tx.Cursor(kv.PlainState)
 	if err != nil {
 		return GenesisAccount{}, err
