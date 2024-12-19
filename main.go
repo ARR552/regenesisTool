@@ -46,7 +46,7 @@ func main() {
 	switch *action {
 	case "extractFullAccount":
 		err = extractFullAccount(*chaindata, libcommon.HexToAddress(*account))
-	case "extractAccountsStorage":
+	case "regenesis":
 		err = ExtractAccountsStorage(*chaindata, *output)
 	}
 
@@ -277,11 +277,10 @@ func extractFullAccount(chaindata string, account libcommon.Address) error {
 			continue
 		}
 		fmt.Printf("StorageSlot: %x => %x\n", k, v)
-		// TODO Store slots
 		if len(k) != 60 {
 			return fmt.Errorf("error: invalid k length. Length: ", len(k))
 		}
-		fmt.Printf("0x%x\n", k[28:])
+		// fmt.Printf("0x%x\n", k[28:])
 	}
 	cc, err := tx.Cursor(kv.PlainContractCode)
 	if err != nil {
